@@ -23,6 +23,7 @@ const supabase = createClient(
 app.use(cors({
   origin: [
     'https://usertree.vercel.app',
+    'https://tree-builder-zeta.vercel.app',
     'http://localhost:3000' // For local testing
   ],
   methods: ['POST', 'GET', 'OPTIONS'],
