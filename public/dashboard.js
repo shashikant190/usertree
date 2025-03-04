@@ -54,5 +54,5 @@ const response = await fetch('/api/logs');
   
     // Refresh data every 5 minutes
     fetchAndUpdateLogs();
-    setInterval(fetchAndUpdateLogs, 300000);
+    setInterval(fetchAndUpdateLogs, 60000);
   });
