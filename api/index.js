@@ -118,8 +118,7 @@ app.get('/api/logs', async (req, res) => {
     if (error) throw error;
 
     // Add caching headers
-    // res.set('Cache-Control', 'public, max-age=300');
-    // res.set('Cache-Control', 'no-cache, max-age=0, must-revalidate');
+    res.set('Cache-Control', 'public, max-age=300');
     
     return res.json(logs || []);
 
