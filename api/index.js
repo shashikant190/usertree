@@ -22,7 +22,7 @@ const supabase = createClient(
 // Enhanced CORS configuration
 app.use(cors({
   origin: [
-    'https://treebuilder-game.vercel.app',
+    'https://usertree.vercel.app',
     'http://localhost:3000' // For local testing
   ],
   methods: ['POST', 'GET', 'OPTIONS'],
