@@ -1,21 +1,32 @@
 document.addEventListener('DOMContentLoaded', () => {
     const ctx = document.getElementById('logChart').getContext('2d');
     let chart;
+    let currentLogs = [];
   
-    async function fetchAndUpdateLogs() {
-      try {
-        // Change fetch URL to
-        // Change the fetch URL to:
-const response = await fetch('/api/logs');
-        const logs = await response.json();
+//     async function fetchAndUpdateLogs() {
+//       try {
+//         // Change fetch URL to
+//         // Change the fetch URL to:
+// const response = await fetch('/api/logs');
+//         const logs = await response.json();
         
-        updateTable(logs);
-        updateChart(logs);
-      } catch (error) {
-        console.error('Error fetching logs:', error);
-      }
-    }
+//         updateTable(logs);
+//         updateChart(logs);
+//       } catch (error) {
+//         console.error('Error fetching logs:', error);
+//       }
+//     }
   
+async function fetchAndUpdateLogs() {
+  try {
+    const response = await fetch('/api/logs');
+    currentLogs = await response.json(); // Store logs globally
+    updateTable(currentLogs);
+    updateChart(currentLogs);
+  } catch (error) {
+    console.error('Error fetching logs:', error);
+  }
+}
     function updateTable(logs) {
       const tbody = document.querySelector('#logTable tbody');
       tbody.innerHTML = logs
@@ -51,6 +62,31 @@ const response = await fetch('/api/logs');
         }
       });
     }
+  
+    // Add download handler INSIDE the main callback
+    document.getElementById('downloadButton').addEventListener('click', () => {
+      if (!currentLogs.length) {
+          alert('No data available to download');
+          return;
+      }
+
+      // Create CSV content
+      const csv = [
+          ['Date', 'User Count'].join(','),
+          ...currentLogs.map(log => [log.date, log.count].join(','))
+      ].join('\n');
+
+      // Create download link
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `user_logs_${new Date().toISOString().split('T')[0]}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+  });
   
     // Refresh data every 5 minutes
     fetchAndUpdateLogs();
