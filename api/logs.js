@@ -4,7 +4,7 @@ export default async function handler(req, res) {
   // GitHub Configuration
   const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
   const [owner, repo] = process.env.GITHUB_REPO.split('/');
-  const path = "userLogsTree.txt";
+  const path = "treebuilder-userlog.txt";
 
   // Handle Increment Request
   if (req.method === 'POST') {

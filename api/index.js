@@ -1,62 +1,55 @@
 const express = require('express');
-const { createClient } = require('@supabase/supabase-js');
 const cors = require('cors');
+const { createClient } = require('@supabase/supabase-js');
 
 const app = express();
-
-// Initialize Supabase
-const supabase = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_KEY
-);
-
-// Helper function
-const getCurrentDate = () => new Date().toISOString().split('T')[0];
+const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY);
 
 app.use(cors());
 app.use(express.json());
 
+// Create this SQL function in Supabase first:
+// CREATE OR REPLACE FUNCTION increment_count()
+// RETURNS void AS $$
+// BEGIN
+//   INSERT INTO user_counts_tree (date, count)
+//   VALUES (CURRENT_DATE, 1)
+//   ON CONFLICT (date)
+//   DO UPDATE SET count = user_counts_tree.count + 1;
+// END;
+// $$ LANGUAGE plpgsql;
+
 app.post('/api/increment', async (req, res) => {
-  const currentDate = getCurrentDate();
-  
   try {
-    const { data: existing, error: selectError } = await supabase
-      .from('user_counts')
+    // Update user_counts_tree table
+    const { error } = await supabase.rpc('increment_count');
+    if (error) throw error;
+
+    // Get updated count
+    const { data } = await supabase
+      .from('user_counts_tree')
       .select('count')
-      .eq('date', currentDate)
+      .eq('date', new Date().toISOString().split('T')[0])
       .single();
 
-    if (existing) {
-      const { data: updated, error: updateError } = await supabase
-        .from('user_counts')
-        .update({ count: existing.count + 1 })
-        .eq('date', currentDate)
-        .single();
-      return res.json({ date: currentDate, count: updated.count });
-    }
-
-    const { data: newEntry, error: insertError } = await supabase
-      .from('user_counts')
-      .insert([{ date: currentDate, count: 1 }])
-      .single();
-
-    return res.json({ date: currentDate, count: newEntry.count });
-
+    res.json({ 
+      date: new Date().toISOString().split('T')[0], 
+      count: data?.count || 1 
+    });
   } catch (error) {
     console.error('Error:', error);
-    return res.status(500).json({ error: 'Database operation failed' });
+    res.status(500).json({ error: 'Failed to update count' });
   }
 });
 
 app.get('/api/logs', async (req, res) => {
   try {
-    const { data: logs, error } = await supabase
-      .from('user_counts')
-      .select('date,count')
+    const { data } = await supabase
+      .from('user_counts_tree')
+      .select('date, count')
       .order('date', { ascending: false });
 
-    res.json(logs || []);
-
+    res.json(data || []);
   } catch (error) {
     console.error('Error:', error);
     res.status(500).json({ error: 'Failed to fetch logs' });

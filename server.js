@@ -24,7 +24,7 @@ app.post('/increment', async (req, res) => {
   try {
     // Check for existing entry
     const { data: existing, error: selectError } = await supabase
-      .from('user_counts')
+      .from('user_counts_tree')
       .select('count')
       .eq('date', currentDate)
       .single();
@@ -32,7 +32,7 @@ app.post('/increment', async (req, res) => {
     if (existing) {
       // Update existing count
       const { data: updated, error: updateError } = await supabase
-        .from('user_counts')
+        .from('user_counts_tree')
         .update({ count: existing.count + 1 })
         .eq('date', currentDate)
         .single();
@@ -42,7 +42,7 @@ app.post('/increment', async (req, res) => {
 
     // Create new entry
     const { data: newEntry, error: insertError } = await supabase
-      .from('user_counts')
+      .from('user_counts_tree')
       .insert([{ date: currentDate, count: 1 }])
       .single();
 
@@ -58,7 +58,7 @@ app.post('/increment', async (req, res) => {
 app.get('/logs', async (req, res) => {
   try {
     const { data: logs, error } = await supabase
-      .from('user_counts')
+      .from('user_counts_tree')
       .select('date,count')
       .order('date', { ascending: false });
 

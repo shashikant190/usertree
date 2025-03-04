@@ -5,7 +5,8 @@ document.addEventListener('DOMContentLoaded', () => {
     async function fetchAndUpdateLogs() {
       try {
         // Change fetch URL to
-        const response = await fetch('/api/logs');
+        // Change the fetch URL to:
+const response = await fetch('/api/logs');
         const logs = await response.json();
         
         updateTable(logs);

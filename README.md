@@ -1,47 +1,32 @@
-# User Activity Logger and Dashboard
+# Tree Builder User Activity Logger and Dashboard 🌳📊
 
-A system to track daily user activity with an admin dashboard for visualization.
+A server-based analytics system for tracking user activity in the Tree Builder game, featuring a real-time dashboard with visual charts and daily user count tracking.
+![Demo](public/screenshots/TreeBuilderDashboard.png?text=Dashboard+Preview) 
 
-![Demo](public/game-images/Dashboard.jpg?text=Dashboard+Preview)<br>
-![Demo](public/game-images/UserActivityDashboard.jpg?text=Dashboard+Preview) 
+## Features ✨
+- Daily user activity tracking with automatic date reset
+- Interactive line chart visualization using Chart.js
+- Tabular display of historical data
+- Simple REST API endpoints for data management
+- Persistent log storage in text file format
+- CORS-enabled secure API endpoints
 
-## Features
+## Installation 🛠️
 
-- **Daily User Tracking**: Automatically resets count at midnight
-- **Persistent Logging**: Stores data in `userLogs.txt` file
-- **REST API**: 
-  - Increment user count
-  - Retrieve historical data
-- **Dashboard**:
-  - Interactive line chart
-  - Data table view
-  - Auto-refresh every 5 minutes
+1. **Prerequisites**
+   - Node.js v16+
+   - npm v8+
 
-## Technologies Used
-
-- **Backend**: Node.js, Express
-- **Frontend**: Vanilla JavaScript, Chart.js
-- **Middleware**: CORS, Express compression
-
-## Prerequisites
-
-- Node.js (v14+)
-- npm (v6+)
-
-## Installation
-
-1. Clone the repository:
-```bash
-git clone https://github.com/shashikant190/usercount-gardencraft.git
-cd usercount-gardencraft
-```
-2. Install dependencies:
+2. **Clone Repository**
+   ```bash
+   git clone https://https://github.com/shashikant190/usercount-treebuilder.git
+   cd usercount-treebuilder
+    ```
+3. Install dependencies:
 ```bash
 npm install
 ```
-```bash
-npm install express cors compression
-```
+
 3. Start the server:
 ```
 node server.js
@@ -55,5 +40,27 @@ Common issues:
 <p>Empty dashboard: Check server logs and userLogs.txt format</p>
 <p>CORS errors: Verify middleware setup in server.js</p>
 
-**Maintained by:** [Shashikant Maurya](https://github.com/shashikant190) & [Suraj Ganeshpure](https://github.com/surajadmin)  
-**Report Issues:** [GitHub Issues](https://github.com/shashikant190/usercount-gardencraft/issues)
+<h1>Configuration ⚙️</h1>
+
+Port: 3001 (modify in treeServer.js)
+Log File: treebuilder-userlog.txt (auto-created)
+Endpoints:
+GET /tree-dashboard - Main dashboard UI
+GET /logs - JSON activity data
+POST /increment-tree - Record user activity
+
+
+<h1>Project Structure 📂</h1>
+
+```bash
+├── treeServer.js            # Main server logic
+├── public/
+│   ├── index.html           # Dashboard HTML
+│   └── tree-builder-dashboard.js # Client-side JS
+├── treebuilder-userlog.txt  # Activity logs (auto-generated)
+├── package.json             # Dependency management
+└── README.md                # This file
+```
+
+**Maintained by:** [Shashikant Maurya](https://github.com/shashikant190) & [Gaurav Suraywanshi](https://github.com/suryawanshigaurav40496)  
+**Report Issues:** [GitHub Issues](https://github.com/shashikant190/usercount-treebuilder/issues)
