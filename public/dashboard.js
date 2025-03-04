@@ -81,13 +81,13 @@ async function fetchAndUpdateLogs() {
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `user_logs_${new Date().toISOString().split('T')[0]}.csv`;
+      a.download = 'treeBuilderUserLogs.csv';
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
       window.URL.revokeObjectURL(url);
   });
-  
+
     // Refresh data every 5 minutes
     fetchAndUpdateLogs();
     setInterval(fetchAndUpdateLogs, 300000);
